@@ -26,5 +26,8 @@ and with the help of [heatmap](http://sethoscope.net/heatmap/) and [OSMViz](http
 
 `Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.`
 
+as well as the RMS Position Error, depending on the Location:
+
+![RMS](DataLogs/Messg_3-RMS-LatLon.png)
 
 #### Take a look at the [IPython Notebook](http://nbviewer.ipython.org/github/balzer82/Pandas-NMEA/blob/master/NMEAparser.ipynb)
