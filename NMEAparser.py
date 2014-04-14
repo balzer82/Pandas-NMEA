@@ -274,6 +274,8 @@ plt.xticks(locs, map(lambda x: "%.2f" % x, locs));
 locs,labels = plt.yticks()
 plt.yticks(locs, map(lambda x: "%.2f" % x, locs));
 
+plt.savefig(fto[:-4]+'-RMS-LatLon.png', dpi=150, bbox_inches='tight')
+
 # <codecell>
 
 print('Done')
