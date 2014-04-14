@@ -18,7 +18,13 @@ $GNGST,094814.70,1.165,0.244,0.027,145.737,0.203,0.139,1.138*48
 
 into this
 
-![RMS]('/DataLogs/Messg_3-RMS.png')
+![RMS](DataLogs/Messg_3-RMS.png)
 
-and this
+and with the help of [heatmap](http://sethoscope.net/heatmap/) and [OSMViz](http://cbick.github.io/osmviz/html/index.html) to this
 
+![Map](DataLogs/Messg_3-GPSHeatmap.png)
+
+`Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.`
+
+
+#### Take a look at the [IPython Notebook](http://nbviewer.ipython.org/github/balzer82/Pandas-NMEA/blob/master/NMEAparser.ipynb)
