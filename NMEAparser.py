@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 from IPython.display import Image as ImageDisp
 from pandas import DataFrame
 import string
+import os
 import matplotlib.pyplot as plt
 
 # <codecell>
@@ -203,6 +204,7 @@ plt.title('Abtastrate')
 
 gpslogfile = fto[:-4]+'-LatLon.log'
 gpsmapfile = fto[:-4]+'-GPSHeatmap.png'
+
 gpsmapwidth= 1100    # px
 gpsmapmargin=100     # px
 gpsmapbase = 'http://b.tile.stamen.com/toner-lite'
@@ -246,8 +248,33 @@ plt.savefig(fto[:-4]+'-RMS.png', dpi=150, bbox_inches='tight')
 
 # <codecell>
 
-print('Done')
+whratio = np.cos(np.mean(GNSSData.LatDD*np.pi/180.0))
+fh = 14.0
+fig = plt.figure(figsize=(fh*whratio, fh))
+
+# Measurements
+every = 50 #
+plt.scatter(GNSSData.LonDD[::every], GNSSData.LatDD[::every], s=100, label='GNSS measurement (every %sst)' % every,\
+            c=GNSSData.RMS[::every], cmap='autumn_r')
+cbar=plt.colorbar()
+cbar.ax.set_ylabel(u'RMS', rotation=270)
+cbar.ax.set_xlabel(u'$m$')
+
+plt.xlabel('Longitude [$^\circ$]')
+plt.ylabel('Latitude [$^\circ$]')
+plt.legend(loc='best')
+#plt.axis('equal')
+#plt.tight_layout()
+
+# xticks
+locs,labels = plt.xticks()
+plt.xticks(locs, map(lambda x: "%.2f" % x, locs));
+
+# ytikcs
+locs,labels = plt.yticks()
+plt.yticks(locs, map(lambda x: "%.2f" % x, locs));
 
 # <codecell>
 
+print('Done')
 
