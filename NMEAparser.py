@@ -39,7 +39,7 @@ def nmeatime(date):
 
 # <codecell>
 
-fto = './DataLogs/Messg_3.log' #  File to Open
+fto = './DataLogs/Messfahrt_2_start64.log' #  File to Open
 data = pd.read_table(fto, sep=',', header=None, index_col=1, parse_dates=True, date_parser=nmeatime, comment='*')
 
 # <headingcell level=1>
@@ -139,10 +139,6 @@ GGAData['LatDD'] = GGAData.LatDD + (GGAData.Lat - 100.0*GGAData.LatDD)/60.0
 GGAData['LonDD'] = (GGAData.Lon/100).fillna(0).astype(int)
 GGAData['LonDD'] = GGAData.LonDD + (GGAData.Lon - 100.0*GGAData.LonDD)/60.0
 
-# <codecell>
-
-GGAData.head(10)
-
 # <headingcell level=2>
 
 # GNSS Data
@@ -154,6 +150,20 @@ GNSSData = pd.merge(GSTData, GGAData, left_index=True, right_index=True, how='ou
 # <codecell>
 
 GNSSData.index.names = ['UTC Time']
+
+# <headingcell level=2>
+
+# Time Offset
+
+# <codecell>
+
+GNSSData.index = GNSSData.index.map(lambda t: t.replace(year=2014, month=4, day=23)) - pd.offsets.Hour(-2)
+GNSSData.index
+
+# <codecell>
+
+pd.options.display.max_columns = 50
+GNSSData.head(10)
 
 # <headingcell level=1>
 
@@ -205,7 +215,7 @@ plt.title('Abtastrate')
 gpslogfile = fto[:-4]+'-LatLon.log'
 gpsmapfile = fto[:-4]+'-GPSHeatmap.png'
 
-gpsmapwidth= 1100    # px
+gpsmapwidth= 800    # px
 gpsmapmargin=100     # px
 gpsmapbase = 'http://b.tile.stamen.com/toner-lite'
 
@@ -228,7 +238,7 @@ gpsheatmap
 
 # <headingcell level=2>
 
-# RMS
+# GNSS Signal Quality Stats
 
 # <codecell>
 
@@ -246,11 +256,15 @@ plt.legend(loc=1)
 
 plt.savefig(fto[:-4]+'-RMS.png', dpi=150, bbox_inches='tight')
 
+# <headingcell level=2>
+
+# RMS
+
 # <codecell>
 
 whratio = np.cos(np.mean(GNSSData.LatDD*np.pi/180.0))
 fh = 14.0
-fig = plt.figure(figsize=(fh*whratio, fh))
+fig = plt.figure(figsize=(fh, fh*whratio))
 
 # Measurements
 every = 50 #
@@ -263,18 +277,37 @@ cbar.ax.set_xlabel(u'$m$')
 plt.xlabel('Longitude [$^\circ$]')
 plt.ylabel('Latitude [$^\circ$]')
 plt.legend(loc='best')
-#plt.axis('equal')
+plt.axis('equal')
 #plt.tight_layout()
 
 # xticks
 locs,labels = plt.xticks()
-plt.xticks(locs, map(lambda x: "%.2f" % x, locs));
+plt.xticks(locs, map(lambda x: "%.3f" % x, locs));
 
 # ytikcs
 locs,labels = plt.yticks()
-plt.yticks(locs, map(lambda x: "%.2f" % x, locs));
+plt.xticks(rotation=35)
+plt.yticks(locs, map(lambda x: "%.3f" % x, locs));
 
 plt.savefig(fto[:-4]+'-RMS-LatLon.png', dpi=150, bbox_inches='tight')
+
+# <headingcell level=2>
+
+# Altitude
+
+# <codecell>
+
+plt.figure(figsize=(fw, 4))
+la=GNSSData['Alt'].plot(alpha=0.6)
+plt.xlabel('Time')
+plt.legend(loc=2)
+ra=GNSSData.SigmaAlt.plot(secondary_y=True, alpha=0.4)
+
+la.set_ylabel('Altitude ($m$)')
+#la.set_ylim([-6,6])
+ra.right_ax.set_ylabel('$\sigma_{Altitude}$')
+#ra.set_ylim([0, 8])
+plt.legend(loc=1)
 
 # <codecell>
 
